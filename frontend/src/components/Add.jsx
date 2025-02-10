@@ -3,11 +3,59 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { IoMdCloudUpload } from "react-icons/io";
+
+import { addVideoApi } from '../services/allApi';
 function Add() {
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
+    const [videoDetails , setVideoDetails] =useState(
+      {
+        caption:"",
+        imgUrl:"",
+        embededLink :""
+      })
+   console.log(videoDetails);
+   
+    const handleClose = () => {setShow(false)
+      handleCancel()
+    };
     const handleShow = () => setShow(true);
+    const handleCancel =()=>{
+      setVideoDetails({
+        caption:"",
+        imgUrl:"",
+        embededLink :""
+      
+      })
+
+    }
+   const handleAdd =async ()=>{
+    const {caption,imgUrl,embededLink} = videoDetails
+    if(!caption ||!imgUrl || !embededLink)
+    {
+      alert(`fill the form`)
+    }
+    else{
+      alert(`sucess`)
+      if(embededLink.startsWith('https://youtu.be/'))
+      {
+        let link = `https://www.youtube.com/embed/${embededLink.slice(17,28)}`
+        console.log(link);
+        const result = await addVideoApi({caption,imgUrl,embededLink:link})
+        console.log(result);
+      
+      }else{
+        let link = `https://www.youtube.com/embed/${embededLink.slice(-11)}`
+        console.log(link);
+        const result = await addVideoApi({caption,imgUrl,embededLink:link})
+        console.log(result);
+      }
+    
+    }
+   }
+   //https://www.youtube.com/watch?v=hSFIicFoiW4
+   //https://youtu.be/hSFIicFoiW4?si=XlXPMnQYvd2WPCDS
+   //<iframe width="1020" height="574" src="https://www.youtube.com/embed/hSFIicFoiW4" title="5 Stages of Spiritual Awakening | Which Stage Are You In" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   return (
 
 <>
@@ -21,19 +69,19 @@ function Add() {
 
 <p>Please Fill the following Details</p>
 <form action=''><div className='p-2 border border-r border-secondary border-2'>
-    <input type='text' placeholder='Video Caption'  className='pt-2 form-control'></input>
-    <input type='text' placeholder='Video Image' className='mt-2 form-control'></input>
-    <input type='text' placeholder='Video Url' className='mt-2 form-control'></input>
+    <input type='text' onChange={(e)=>setVideoDetails({...videoDetails, caption:e.target.value})} placeholder='Video Caption'  value={videoDetails.caption}  className='pt-2 form-control'></input>
+    <input type='text' onChange={(e)=>setVideoDetails({...videoDetails, imgUrl:e.target.value})} placeholder='Video Image' value={videoDetails.imgUrl} className='mt-2 form-control'></input>
+    <input type='text' onChange={(e)=>setVideoDetails({...videoDetails, embededLink:e.target.value})} placeholder='Video Url' value={videoDetails.embededLink} className='mt-2 form-control'></input>
 </div>
 </form>
 
 
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={handleClose}>
+          <Button variant="danger" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleAdd}>
             Upload
           </Button>
         </Modal.Footer>
