@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-
+import { ToastContainer, toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { IoMdCloudUpload } from "react-icons/io";
 
 import { addVideoApi } from '../services/allApi';
-function Add() {
+
+function Add({setAddstatus}) {
     const [show, setShow] = useState(false);
 
     const [videoDetails , setVideoDetails] =useState(
@@ -33,22 +34,45 @@ function Add() {
     const {caption,imgUrl,embededLink} = videoDetails
     if(!caption ||!imgUrl || !embededLink)
     {
-      alert(`fill the form`)
+      // alert(``)
+      toast.info(`fill the form`)
     }
     else{
-      alert(`sucess`)
-      if(embededLink.startsWith('https://youtu.be/'))
+        if(embededLink.startsWith('https://youtu.be/'))
       {
         let link = `https://www.youtube.com/embed/${embededLink.slice(17,28)}`
         console.log(link);
         const result = await addVideoApi({caption,imgUrl,embededLink:link})
         console.log(result);
+        if(result.status >=200 && result.status <300)
+        {
+          // alert(`media uploaded succesfully`)
+          toast.success(`media uploaded succesfully`)
+          handleClose()
+          setAddstatus(result)  
+        }
+        else{
+          // alert(`Something went wrong`)
+          toast.warning(`Something went wrong`)
+        }
       
-      }else{
+      }
+      else{
         let link = `https://www.youtube.com/embed/${embededLink.slice(-11)}`
         console.log(link);
         const result = await addVideoApi({caption,imgUrl,embededLink:link})
         console.log(result);
+        if(result.status >=200 && result.status <300)
+          {
+            // alert(`media uploaded succesfully`)
+            toast.success(`media uploaded succesfully`)
+            handleClose()
+            setAddstatus(result)  
+          }
+          else{
+            // alert(`Something went wrong`)
+            toast.warning(`Something went wrong`)
+          }
       }
     
     }
@@ -85,6 +109,7 @@ function Add() {
             Upload
           </Button>
         </Modal.Footer>
+        <ToastContainer position='top-center' theme='dark' autoClose={5000}/>
       </Modal>
 </>
   )
