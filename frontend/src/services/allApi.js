@@ -23,6 +23,17 @@ export const getwatchhistoryApi = async ()=>{
 } 
 
 export const removeWatchHistory = async(id)=>
-    {
+{
         return await commonApi(`DELETE`,`${serverUrl}/history/${id}`,{})
-    }
+}
+
+export const addCategoryApi = async(reqBody)=>{
+    return await commonApi(`POST`,`${serverUrl}/category`,reqBody)
+}
+
+export const getCategoryApi = async()=>{
+    return await commonApi(`GET`,`${serverUrl}/category`,"")
+}
+export const deleteCategoryApi = async(id)=>{
+    return await commonApi(`DELETE`,`${serverUrl}/category/${id}`,{})
+}

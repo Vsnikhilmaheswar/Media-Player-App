@@ -30,10 +30,19 @@ const handleDelete = async(id)=> {
   {
     setDeleteStatus(result)
   }
+
+
+}
+
+const videoDrag = (e, vDetails)=>{
+console.log(e);
+console.log(vDetails);
+e.dataTransfer.setData("videoDetails",JSON.stringify(vDetails))
+
 }
   return (
     <>
-      <Card style={{ width: '100%' }} >
+      <Card style={{ width: '100%' }} draggable onDragStart={(e)=>videoDrag(e,videoDetails)}>
       <Card.Img  onClick={handleShow} variant="top" style={{width:"100%" ,height:"300px"} } src={videoDetails?.imgUrl} />
       <Card.Body className='d-flex justify-content-between align-items-center'>
         <Card.Title>{videoDetails?.caption}</Card.Title>
