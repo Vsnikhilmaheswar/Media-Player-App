@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { FaTrashAlt } from "react-icons/fa";
 import VideoCard from './VideoCard';
 import Modal from 'react-bootstrap/Modal';
-import { addCategoryApi, deleteCategoryApi, getCategoryApi } from '../services/allApi';
+import { addCategoryApi, deleteCategoryApi, getCategoryApi, updateCategoryApi } from '../services/allApi';
 import AllVideos from './AllVideos';
 function Categories() {
   const [show, setShow] = useState(false);
@@ -13,6 +13,8 @@ function Categories() {
   const [allCategory ,setAllCategory] = useState([])
   const [categoryName,setCategoryName]= useState("")
   const [categoryStatus,setCategoryStatus]  =useState("")
+  const [deleteStatus,setDeleteStatus] = useState([])
+  const [ UpdateCategoryStatus, setUpdateCategoryStatus] =useState([])
   console.log(categoryName);
   const handleCancel = ()=>{
     setCategoryName("")
@@ -20,7 +22,7 @@ function Categories() {
 const handleAdd = async()=>{
   if(!categoryName)
   {
-    alert(`enter category name`)
+    alert(`enter category name`) 
   }else{
  
  const reqbody ={
@@ -33,6 +35,7 @@ const handleAdd = async()=>{
       alert(`Category added Successfully`)
       handleCancel()
       handleClose()
+    
     }
     else{
       alert('Something went WRONG')
@@ -46,22 +49,53 @@ const getCategory = async()=>{
     {
   setAllCategory(result.data)
   setCategoryStatus(result)
+
     }
 
 }
 const handleDelete = async(id) =>{
  const result =  deleteCategoryApi(id)
-}
+  if(result.status >=200 && result.status<300)
+    {
+       setDeleteStatus(result)
+    }
+ }
 const videoOver = (e)=>{
   e.preventDefault()
 }
-const videoDrop = (e ,categoryDetails)=>{
+
+const videoDrop = async (e ,categoryDetails)=>{
   console.log("cat",categoryDetails);
   const videoDetails = JSON.parse(e.dataTransfer.getData("videoDetails"))
+   console.log(",d",videoDetails);
+  
+   if(categoryDetails.AllVideos.find((item) => item.id == videoDetails.id))
+   {
+    alert(`video already added!!`)
+   }
+   else
+   {
+    categoryDetails.AllVideos.push(videoDetails)
+    console.log(categoryDetails)
+    const result = await updateCategoryApi(categoryDetails.id,categoryDetails)
+    if(result.status >=200 && result.status<300)
+      {
+    setUpdateCategoryStatus(result)
+      }
+   } 
 }
+const videoDrag = (e,videoDetails,categoryDetails)=>{
+  const Details ={
+    videoDetails,
+    categoryDetails
+  }
+  e.dataTransfer.setData("Details",JSON.stringify(Details))
+
+}
+
 useEffect(()=>{
  getCategory() 
-},[])
+},[categoryStatus,deleteStatus,UpdateCategoryStatus])
 
 
   return (
@@ -78,8 +112,15 @@ allCategory.map((item)=>(
       <Button variant="danger" onClick={()=>{handleDelete(item?.id)}} ><FaTrashAlt />
       </Button>
   </div>
+  {
+item.AllVideos.length>0 && item?.AllVideos.map((video)=> 
 
-  {/* <VideoCard/> */}
+   <div draggable onDragStart={(e)=>videoDrag(e,video,item)}>
+    <VideoCard videoDetails={video}  present={true}/>
+   </div>
+)
+   
+  }
 </div>
 ))
  

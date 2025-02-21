@@ -15,6 +15,7 @@ export const removeVideApi = async(id)=>
 {
     return await commonApi(`DELETE`,`${serverUrl}/video/${id}`,{})
 }
+
 export const addwatchhistoryApi = async (reqBody)=>{
     return await commonApi(`POST`,`${serverUrl}/history`,reqBody)
 } 
@@ -34,6 +35,12 @@ export const addCategoryApi = async(reqBody)=>{
 export const getCategoryApi = async()=>{
     return await commonApi(`GET`,`${serverUrl}/category`,"")
 }
+
 export const deleteCategoryApi = async(id)=>{
     return await commonApi(`DELETE`,`${serverUrl}/category/${id}`,{})
+}
+
+export const updateCategoryApi = async(categoryId,reqBody)=>{
+    return await commonApi("PUT",`${serverUrl}/Category/${categoryId}`,reqBody)
+
 }

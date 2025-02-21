@@ -15,6 +15,9 @@ function AllVideos({addstatus}) {
    console.log(videos);
    console.log("dele",deleteStatus);
    
+const drapOver=()=>
+  e.preventDefault()
+
   useEffect(()=>{
 getAllVideos()
   },[addstatus,deleteStatus])
@@ -23,7 +26,7 @@ getAllVideos()
     <>
     <h2>All Videos</h2>
     { videos?.length > 0 ?
-      <div className='container-fluid mt-5'>
+      <div className='container-fluid mt-5' droppable onDragOver={(e)=>drapOver(e)} onDrop={(e)=>videoDrop(e)}>
       <div className='row'>
     
      {  videos?.map((item)=> (

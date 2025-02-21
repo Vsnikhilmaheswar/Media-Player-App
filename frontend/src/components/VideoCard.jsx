@@ -5,7 +5,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { addwatchhistoryApi, removeVideApi } from '../services/allApi';
-function VideoCard({setDeleteStatus,videoDetails}) {
+function VideoCard({setDeleteStatus,videoDetails,present}) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -43,13 +43,14 @@ e.dataTransfer.setData("videoDetails",JSON.stringify(vDetails))
   return (
     <>
       <Card style={{ width: '100%' }} draggable onDragStart={(e)=>videoDrag(e,videoDetails)}>
-      <Card.Img  onClick={handleShow} variant="top" style={{width:"100%" ,height:"300px"} } src={videoDetails?.imgUrl} />
+  { !present &&  <Card.Img  onClick={handleShow} variant="top" style={{width:"100%" ,height:"300px"} } src={videoDetails?.imgUrl} />}
       <Card.Body className='d-flex justify-content-between align-items-center'>
         <Card.Title>{videoDetails?.caption}</Card.Title>
-       
-        <Button onClick={()=>{handleDelete(videoDetails?.id)}
-        } variant="danger"><FaTrashAlt />
-        </Button>
+    { !present  &&  
+      <Button onClick={()=>{handleDelete(videoDetails?.id)}
+      } variant="danger"><FaTrashAlt />
+      </Button>
+      }
       </Card.Body>
     </Card>
 
