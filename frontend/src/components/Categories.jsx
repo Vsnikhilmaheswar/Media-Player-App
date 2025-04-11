@@ -33,6 +33,7 @@ const handleAdd = async()=>{
     if(result.status >=200 && result.status<300)
     {
       alert(`Category added Successfully`)
+      setCategoryStatus(result)
       handleCancel()
       handleClose()
     
@@ -48,18 +49,21 @@ const getCategory = async()=>{
   if(result.status >=200 && result.status<300)
     {
   setAllCategory(result.data)
-  setCategoryStatus(result)
+ 
 
     }
 
 }
+
 const handleDelete = async(id) =>{
- const result =  deleteCategoryApi(id)
+  const result =  deleteCategoryApi(id)
   if(result.status >=200 && result.status<300)
     {
        setDeleteStatus(result)
     }
  }
+
+
 const videoOver = (e)=>{
   e.preventDefault()
 }
@@ -95,7 +99,7 @@ const videoDrag = (e,videoDetails,categoryDetails)=>{
 
 useEffect(()=>{
  getCategory() 
-},[categoryStatus,deleteStatus,UpdateCategoryStatus])
+},[deleteStatus,categoryStatus,UpdateCategoryStatus])
 
 
   return (

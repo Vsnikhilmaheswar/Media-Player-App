@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import VideoCard from './VideoCard'
-import { getVideoApi } from '../services/allApi';
+import { getVideoApi, updateCategoryApi } from '../services/allApi';
 
 function AllVideos({addstatus}) {
 
@@ -15,11 +15,24 @@ function AllVideos({addstatus}) {
    console.log(videos);
    console.log("dele",deleteStatus);
    
-const drapOver=()=>
-  e.preventDefault()
+const drapOver=(e)=>
+{  e.preventDefault()
+}
+
+   const videoDrop = async(e)=>
+    {
+    const {videoDetails,categoryDetails } = JSON.parse(e.dataTransfer.getData("Details"))
+    const response = categoryDetails.AllVideos.filter((item)=>item.id!=videoDetails.id)
+    const reqBody = {
+      categoryName : categoryDetails.categoryName,
+      AllVideos : response,
+      id : categoryDetails.id
+    }
+    const result = await updateCategoryApi(categoryDetails.id,reqBody)
+    }
 
   useEffect(()=>{
-getAllVideos()
+    getAllVideos()
   },[addstatus,deleteStatus])
 
   return (
